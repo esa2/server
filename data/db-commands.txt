@@ -1,0 +1,114 @@
+/*
+ * These series of commands can be used to create/recreate the local database
+ * for uVue from scratch.
+ * All commands should work with simple copy/paste in the terminal.
+ */
+
+/*
+ * If a db already exists, delete it
+ */
+drop database uvue_app;
+
+/*
+ * Use this command to create the database
+ */
+create database uvue_app;
+
+/*
+ * Select the uVue database
+ */
+\c uvue_app;
+
+/*
+ * This command will create our user table
+ * We will limit the length of real names, user names, and passwords to a
+ * length of 56 characters
+ */
+create table users (
+  user_id serial primary key,
+  realname varchar(55) not null,
+  username varchar(55) not null,
+  password varchar(55) not null
+);
+
+/*
+ * Populate the table with some users. For this test data, since the database
+ * was newly created, we know these users will get primary keys 1..4. That
+ * assertion is used below to add a couple search terms for each user.
+ */
+insert into users(realname, username, password)
+values(
+       'Steven Carpenter',
+       'scarpenter',
+       'pass'
+       );
+
+insert into users(realname, username, password)
+values(
+       'Yohanes Demissie',
+       'ydemissie',
+       'pass'
+       );
+
+insert into users(realname, username, password)
+values(
+       'Ed Abrahamsen',
+       'eabrahamsen',
+       'pass'
+       );
+
+insert into users(realname, username, password)
+values(
+       'Cody Williams',
+       'cwilliams',
+       'pass'
+       );
+
+/*
+ * Create a new table for search terms
+ */
+create table search (
+  search_id serial primary key,
+  search_string varchar(255) not null,
+  user_id integer not null references users(user_id)
+);
+
+/*
+ * Add a couple search terms per person
+ * Since the table was freshly created above, we know users have the following primary keys:
+ * Steve: 1
+ * Yohanes: 2
+ * Ed: 3
+ * Cody: 4
+ *
+ * It's a hacky approach, but just for initial data population
+ */
+/* Steve */
+insert into search(search_string, user_id)
+values('Javascript', 1);
+insert into search(search_string, user_id)
+values('Retropie', 1);
+
+/* Yohanes */
+insert into search(search_string, user_id)
+values('CSS', 2);
+insert into search(search_string, user_id)
+values('React', 2);
+
+/* Ed */
+insert into search(search_string, user_id)
+values('Skynet', 3);
+insert into search(search_string, user_id)
+values('Cats', 3);
+
+/* Cody */
+insert into search(search_string, user_id)
+values('Sports', 4);
+insert into search(search_string, user_id)
+values('SMACS', 4);
+
+/* Finally, you can view all the data using the following queries */
+select * from users;
+select * from search;
+select * from users
+  join search on users.user_id=search.user_id;

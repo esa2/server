@@ -15,5 +15,14 @@ client.on('error', err => console.error(err));
 app.use(cors());
 app.get('/', (req, res) => res.send('testing 1,2,3'));
 
+// Query database for user based on username
+app.get('/api/v1/users/:username', (req, res) => {
+  client.query(
+    `select * from users where username='${req.params.username}'`
+  )
+    .then(results => res.send(results.rows))
+    .catch(console.error);
+});
+
 app.get('*', (req, res) => res.redirect(CLIENT_URL));
 app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));

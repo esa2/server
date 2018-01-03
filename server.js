@@ -33,6 +33,19 @@ app.get('/api/v1/users/:username', (req, res) => {
     .catch(console.error);
 });
 
+app.get('/api/v3/videos/search', (req, res) => {
+  console.log('in server get')
+  console.log('req body start here ' + req.query)
+  superAgent.get(`https://www.googleapis.com/youtube/v3/search?q=${req.query.search}&maxResults=2&part=snippet&key=${API_KEY}`)
+    .then(results => {
+      console.log('string results ' + JSON.stringify(results))
+      console.log(JSON.parse(results.text))
+      console.log(JSON.parse(results.text).items[0].id)
+      res.send(JSON.parse(results.text))
+    })
+    .catch(console.error)
+});
+
 // Create a new user in the database
 app.post('/api/v1/users', (req, res) => {
   let { realname, username, password } = req.body;
@@ -40,17 +53,7 @@ app.post('/api/v1/users', (req, res) => {
     .query(`insert into users(realname, username, password)
       values($1, $2, $3)`,
       [realname, username, password])
-    .then(results => res.sendStatus(201))
-    .catch(console.error);
-})
-
-app.get('/api/v3/videos/search', (req, res) => {
-  console.log('in server get');
-  superAgent
-    .get(
-      `https://www.googleapis.com/youtube/v3/search?q=javascript&maxResults=1&part=snippet&key=${API_KEY}`,
-    )
-    .then(data => console.log(data))
+    .then(() => res.sendStatus(201))
     .catch(console.error);
 });
 

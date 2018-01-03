@@ -57,5 +57,21 @@ app.post('/api/v1/users', (req, res) => {
     .catch(console.error);
 });
 
+// Query database for 'search' terms. This is not a search.
+app.get('/api/v1/users/:username/search', (req, res) => {
+  client
+    .query(`select * from users where username=$1;`,
+      [req.params.username])
+    .then((data) => data.rows[0].user_id)
+    .then((user_id) => {
+      return client
+        .query(`select * from search where user_id=$1`,
+          [user_id])
+        .then(data => res.send(data.rows))
+        .catch(console.error);
+    })
+    .catch(console.error);
+});
+
 app.get('*', (req, res) => res.redirect(CLIENT_URL));
 app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));

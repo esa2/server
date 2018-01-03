@@ -22,6 +22,15 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.get('/', (req, res) => res.send('testing 1,2,3'));
 
+// Query database for user based on username
+app.get('/api/v1/users/:username', (req, res) => {
+  client.query(
+    `select * from users where username='${req.params.username}'`
+  )
+    .then(results => res.send(results.rows))
+    .catch(console.error);
+});
+
 app.get('/api/v3/videos/search', (req, res) => {
   console.log('in server get')
   superAgent.get(`https://www.googleapis.com/youtube/v3/search?q=javascript&maxResults=1&part=snippet&key=${API_KEY}`)

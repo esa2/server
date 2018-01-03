@@ -12,7 +12,6 @@ const CLIENT_URL = process.env.CLIENT_URL;
 const client = new pg.Client(process.env.DATABASE_URL);
 const API_KEY = process.env.YOUTUBE_API_KEY;
 
-
 client.connect();
 client.on('error', err => console.error(err));
 
@@ -33,8 +32,14 @@ app.get('/api/v1/users/:username', (req, res) => {
 
 app.get('/api/v3/videos/search', (req, res) => {
   console.log('in server get')
-  superAgent.get(`https://www.googleapis.com/youtube/v3/search?q=javascript&maxResults=1&part=snippet&key=${API_KEY}`)
-    .then( data => console.log(data))
+  console.log('req body start here ' + req.query)
+  superAgent.get(`https://www.googleapis.com/youtube/v3/search?q=${req.query.search}&maxResults=2&part=snippet&key=${API_KEY}`)
+    .then(results => {
+      console.log('string results ' + JSON.stringify(results))
+      console.log(JSON.parse(results.text))
+      console.log(JSON.parse(results.text).items[0].id)
+      res.send(JSON.parse(results.text))
+    })
     .catch(console.error)
 })
 

@@ -100,6 +100,8 @@ insert into search(search_string, user_id)
 values('Skynet', 3);
 insert into search(search_string, user_id)
 values('Cats', 3);
+insert into search(search_string, user_id)
+values('Dogs', 3);
 
 /* Cody */
 insert into search(search_string, user_id)

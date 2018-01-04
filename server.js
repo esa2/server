@@ -81,5 +81,22 @@ app.get('/api/v1/users/:username/search', (req, res) => {
     .catch(console.error);
 });
 
+app.delete('/api/v1/users/:username/search', (req, res) => {
+  client
+    .query(`select * from users where username=$1;`,
+      [req.params.username])
+    .then((data) => data.rows[0].user_id)
+    .then((user_id) => {
+      client.query(`DELETE FROM search WHERE user_id=$1 AND search_string=$2`,
+        [user_id, req.params.interest])
+        .then(() => res.send('Delete complete'))
+        .then(() => console.log(req.body.interest))
+        .catch(console.error);
+    })
+    .catch(console.error);
+})
+// INSERT INTO search(search_string, user_id)
+// VALUES('x', 3);
+
 app.get('*', (req, res) => res.redirect(CLIENT_URL));
 app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));

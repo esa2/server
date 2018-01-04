@@ -35,7 +35,8 @@ app.get('/api/v1/users/:username', (req, res) => {
 
 app.get('/api/v3/videos/search', (req, res) => {
   console.log('req body start here ' + req.query)
-  superAgent.get(`https://www.googleapis.com/youtube/v3/search?q=${req.query.search}&maxResults=2&part=snippet&key=${API_KEY}`)
+  console.log(req.query);
+  superAgent.get(`https://www.googleapis.com/youtube/v3/search?q=${req.query.search}&maxResults=1&part=snippet&key=${API_KEY}`)
     .then(results => {
       res.send(JSON.parse(results.text))
     })

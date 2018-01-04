@@ -46,6 +46,22 @@ app.get('/api/v3/videos/search', (req, res) => {
     })
     .catch(console.error)
 });
+// adding daily motion api
+
+app.get('/api/dailymotion/videos/search', (req, res) => {
+  console.log('in dm server get')
+  console.log('req dm body start here ' + req.query)
+  console.log(req.query);
+  superAgent.get(`https://api.dailymotion.com/videos?search=${req.query.search}&limit=2`)
+    .then(results => {
+      console.log('string dm results ' + JSON.stringify(results))
+      console.log(JSON.parse(results.text))
+      // console.log(JSON.parse(results.text).items[0].id)
+      res.send(JSON.parse(results.text))
+    })
+    .catch(console.error)
+});
+
 
 // Create a new user in the database
 app.post('/api/v1/users', (req, res) => {

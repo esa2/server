@@ -33,6 +33,7 @@ app.get('/api/v1/users/:username', (req, res) => {
     .catch(console.error);
 });
 
+// Youtube api call
 app.get('/api/v3/videos/search', (req, res) => {
   console.log('req body start here ' + req.query)
   console.log(req.query);
@@ -43,6 +44,7 @@ app.get('/api/v3/videos/search', (req, res) => {
     .catch(console.error)
 });
 
+// Daily motion api call
 app.get('/api/dailymotion/videos/search', (req, res) => {
   console.log('in dm server get')
   console.log('req dm body start here ' + req.query)
@@ -95,8 +97,6 @@ app.delete('/api/v1/users/:username/search', (req, res) => {
     })
     .catch(console.error);
 })
-// INSERT INTO search(search_string, user_id)
-// VALUES('x', 3);
 
 app.get('*', (req, res) => res.redirect(CLIENT_URL));
 app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));

@@ -81,22 +81,37 @@ app.get('/api/v1/users/:username/search', (req, res) => {
     .catch(console.error);
 });
 
-app.delete('/api/v1/users/:username/search', (req, res) => {
+// Create a new interest in the search table
+app.post('/api/v1/users/:username/:interest/search', (req, res) => {
   client
     .query(`select * from users where username=$1;`,
       [req.params.username])
     .then((data) => data.rows[0].user_id)
     .then((user_id) => {
-      client.query(`DELETE FROM search WHERE user_id=$1 AND search_string=$2`,
-        [user_id, req.params.interest])
-        .then(() => res.send('Delete complete'))
-        .then(() => console.log(req.body.interest))
+      client
+        .query(`INSERT INTO search(search_string, user_id) VALUES($1, $2)`,
+          [req.params.interest, user_id])
+        .then(() => res.send('Add interest complete'))
         .catch(console.error);
     })
     .catch(console.error);
 })
-// INSERT INTO search(search_string, user_id)
-// VALUES('x', 3);
+
+// Delete an interest from the search table
+app.delete('/api/v1/users/:username/:interest/search', (req, res) => {
+  client
+    .query(`select * from users where username=$1;`,
+      [req.params.username])
+    .then((data) => data.rows[0].user_id)
+    .then((user_id) => {
+      client
+        .query(`DELETE FROM search WHERE user_id=$1 AND search_string=$2`,
+          [user_id, req.params.interest])
+        .then(() => res.send('Delete complete'))
+        .catch(console.error);
+    })
+    .catch(console.error);
+})
 
 app.get('*', (req, res) => res.redirect(CLIENT_URL));
 app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));

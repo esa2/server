@@ -37,6 +37,11 @@ app.get('/api/v3/videos/search', (req, res) => {
   console.log('req body start here ' + req.query)
   console.log(req.query);
   superAgent.get(`https://www.googleapis.com/youtube/v3/search?q=${req.query.search}&maxResults=1&part=snippet&key=${API_KEY}`)
+    .then((results) => {
+      console.log('YOUTUBE RESULTS');
+      console.log(results);
+      return results;
+    })
     .then(results => {
       res.send(JSON.parse(results.text))
     })
@@ -59,7 +64,7 @@ app.post('/api/v1/users', (req, res) => {
   let { realname, username, password } = req.body;
   client
     .query(`insert into users(realname, username, password)
-      values($1, $2, $3)`,
+      values($1, $2, $3) on conflict do nothing`,
       [realname, username, password])
     .then(() => res.sendStatus(201))
     .catch(console.error);

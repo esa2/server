@@ -26,8 +26,8 @@ create database uvue_app;
  */
 create table users (
   user_id serial primary key,
-  realname varchar(55) not null,
-  username varchar(55) not null,
+  realname varchar(55) unique not null,
+  username varchar(55) unique not null,
   password varchar(55) not null
 );
 

@@ -47,7 +47,7 @@ app.get('/api/dailymotion/videos/search', (req, res) => {
   console.log('in dm server get')
   console.log('req dm body start here ' + req.query)
   console.log(req.query);
-  superAgent.get(`https://api.dailymotion.com/videos?search=${req.query.search}&limit=2`)
+  superAgent.get(`https://api.dailymotion.com/videos?search=${req.query.search}&limit=1&language=en`)
     .then(results => {
       res.send(JSON.parse(results.text))
     })

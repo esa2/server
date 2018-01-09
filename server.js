@@ -36,9 +36,8 @@ app.get('/api/v1/users/:username', (req, res) => {
 app.get('/api/v3/videos/search', (req, res) => {
   console.log('req body start here ' + req.query)
   console.log(req.query);
-  superAgent.get(`https://www.googleapis.com/youtube/v3/search?q=${req.query.search}&maxResults=1&part=snippet&key=${API_KEY}`)
+  superAgent.get(`https://www.googleapis.com/youtube/v3/search?q=${req.query.search}&maxResults=2&part=snippet&key=${API_KEY}`)
     .then((results) => {
-      console.log('YOUTUBE RESULTS');
       console.log(results);
       return results;
     })
@@ -52,7 +51,7 @@ app.get('/api/dailymotion/videos/search', (req, res) => {
   console.log('in dm server get')
   console.log('req dm body start here ' + req.query)
   console.log(req.query);
-  superAgent.get(`https://api.dailymotion.com/videos?search=${req.query.search}&limit=1&language=en`)
+  superAgent.get(`https://api.dailymotion.com/videos?search=${req.query.search}&limit=2&language=en`)
     .then(results => {
       res.send(JSON.parse(results.text))
     })
